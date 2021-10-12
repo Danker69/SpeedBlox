@@ -6,7 +6,7 @@
 
 local CreditsHandler = {}
 
-function CreditsHandler.AddCredit(layoutOrder: integer, userId: number, title: string)
+function CreditsHandler.AddCredit(layoutOrder: number, userId: number, title: string)
 	local Players = game:GetService("Players")
 	local player = Players.LocalPlayer
 	

@@ -33,7 +33,7 @@ function StageOptimizer.Default()
     end
 end
 
-function StageOptimizer.RemoveAllStagesAndAdd(stageIndex: integer)
+function StageOptimizer.RemoveAllStagesAndAdd(stageIndex: number)
     -- Removes all stages except the one passed in the arguments.
     _table[stageIndex].Parent = workspace.Stages
     portalTable[stageIndex].Parent = workspace.Portals
@@ -51,7 +51,7 @@ function StageOptimizer.RemoveAllStagesAndAdd(stageIndex: integer)
     end
 end
 
-function StageOptimizer.NextStage(newStageIndex: integer)
+function StageOptimizer.NextStage(newStageIndex: number)
     -- Adds the next stage and deletes the last.
     _table[newStageIndex].Parent = workspace.Stages
     portalTable[newStageIndex].Parent = workspace.Portals
@@ -62,7 +62,7 @@ function StageOptimizer.NextStage(newStageIndex: integer)
     end
 end
 
-function StageOptimizer.Switch(toAddIndex: integer, toRemoveIndex: integer)
+function StageOptimizer.Switch(toAddIndex: number, toRemoveIndex: number)
     -- Remove and add a specific stage.
     _table[toAddIndex].Parent = workspace.Stages
     _table[toRemoveIndex].Parent = nil
@@ -71,13 +71,13 @@ function StageOptimizer.Switch(toAddIndex: integer, toRemoveIndex: integer)
     portalTable[toRemoveIndex].Parent = nil
 end
 
-function StageOptimizer.AddStage(stageIndex: integer)
+function StageOptimizer.AddStage(stageIndex: number)
     -- Adds a stage
     _table[stageIndex].Parent = workspace.Stages
     portalTable[stageIndex].Parent = workspace.Portals
 end
 
-function StageOptimizer.RemoveStage(stageIndex: integer)
+function StageOptimizer.RemoveStage(stageIndex: number)
     -- Removes a stage
     _table[stageIndex].Parent = nil
     portalTable[stageIndex].Parent = nil

@@ -18,7 +18,7 @@ local tags = {
     ["Error"] = {TagText = "ERROR", TagColor = Color3.fromRGB(255, 0, 0)};
 }
 
-function ChatTags.Client:ChangeTag(player: player, tag: string)
+function ChatTags.Client:ChangeTag(player: Player, tag: string)
     self.Server.Services.DataManager:Get(player).CurrentTag = tag
 
     local SSS = game:GetService("ServerScriptService")

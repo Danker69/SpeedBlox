@@ -21,7 +21,28 @@ function EventHandler.Client:getShopTrails()
     return data
 end
 
-function EventHandler.Client:setTrail(trailId: string)
+function EventHandler.Client:setTrail(player: Player, trailId: string) print "event fired"
+    local Trails: Folder = RS.Assets.Shop.Trails
+
+    local function createTrail()
+        if not player.Character.Head:FindFirstChildOfClass("Trail") then -- trail doesn't exist, create new one
+            local trailC: Trail = Trails[trailId]:Clone()
+
+            trailC.Parent = player.Character.Head
+            local Attach0 = Instance.new("Attachment", player.Character.Head)
+            Attach0.Name = "Attachment0"
+
+            local Attach1 = Instance.new("Attachment", player.Character.HumanoidRootPart)
+            Attach1.Name = "Attachment1"
+
+            trailC.Attachment0 = Attach0
+            trailC.Attachment1 = Attach1
+        else -- trail exists, remove current, add new
+
+        end
+    end
+
+    createTrail()
 
 end
 

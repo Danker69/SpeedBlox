@@ -39,9 +39,13 @@ function Shop:Start()
         end
 
         clone.Use.MouseButton1Click:Connect(function()
-            self.Services.EventHandler:setTrail(trailId)
+            local success = self.Services.EventHandler:setTrail(trailId)
 
-            
+            if success then
+                
+            else
+
+            end
         end)
 
         clone.Visible = true
