@@ -21,29 +21,90 @@ function EventHandler.Client:getShopTrails()
     return data
 end
 
-function EventHandler.Client:setTrail(player: Player, trailId: string) print "event fired"
+function EventHandler:setTrail(player: Player, trailId: string, dequip: string?): boolean | string
+    local profile = self.Services.DataManager:Get(player)
+
+    if trailId == "" then print("trailId = ''") return "reset" end
+
+    if dequip == "dequip" then
+        print("dequipping...")
+        self.Services.DataManager:Get(player).Inventory.CurrentTrail = ""
+
+        if player.Character.Head:FindFirstChildOfClass("Trail") then -- trail exists, remove current
+            player.Character.Head:FindFirstChildOfClass("Trail"):Destroy()
+            player.Character.Head["Attachment0-Trail"]:Destroy()
+            player.Character.HumanoidRootPart["Attachment1-Trail"]:Destroy()
+        end
+        return "dequip"
+    end
+
     local Trails: Folder = RS.Assets.Shop.Trails
 
+    local function isOwned(): boolean
+        local profile: table = self.Services.DataManager:Get(player)
+
+        return table.find(profile.Inventory.Trails, trailId) and true or nil
+    end
+
     local function createTrail()
-        if not player.Character.Head:FindFirstChildOfClass("Trail") then -- trail doesn't exist, create new one
+        local sameExists: boolean = false
+
+        if (player.Character.Head:FindFirstChildOfClass("Trail")) then -- trail exists, remove current, add new
+            if player.Character.Head:FindFirstChildOfClass("Trail").Name ~= trailId then
+                player.Character.Head:FindFirstChildOfClass("Trail"):Destroy()
+                player.Character.Head["Attachment0-Trail"]:Destroy()
+                player.Character.HumanoidRootPart["Attachment1-Trail"]:Destroy()
+            else
+                sameExists = true
+            end
+        end
+
+        if not sameExists then
             local trailC: Trail = Trails[trailId]:Clone()
 
             trailC.Parent = player.Character.Head
-            local Attach0 = Instance.new("Attachment", player.Character.Head)
-            Attach0.Name = "Attachment0"
-
-            local Attach1 = Instance.new("Attachment", player.Character.HumanoidRootPart)
-            Attach1.Name = "Attachment1"
-
+            local Attach0: Attachment = Instance.new("Attachment", player.Character.Head)
+            Attach0.Name = "Attachment0-Trail"
+    
+            local Attach1: Attachment = Instance.new("Attachment", player.Character.HumanoidRootPart)
+            Attach1.Name = "Attachment1-Trail"
+    
             trailC.Attachment0 = Attach0
             trailC.Attachment1 = Attach1
-        else -- trail exists, remove current, add new
-
         end
     end
 
-    createTrail()
+    local function purchase(): boolean
+        local price: number = Trails[trailId]:GetAttribute("Price")
 
+        if profile.Coins >= price then
+
+            profile.Coins -= price
+
+            profile.Inventory.CurrentTrail = trailId
+            table.insert(profile.Inventory.Trails, trailId)
+
+            createTrail()
+            return true
+        else
+            return false
+        end
+    end
+
+    if isOwned() then
+        profile.Inventory.CurrentTrail = trailId
+        createTrail()
+        return true
+    else
+        return purchase()
+    end
+
+    -- Testing:
+    -- createTrail()
+end
+
+function EventHandler.Client:setTrail(player: Player, trailId: string, dequip: string?): boolean
+    return self.Server:setTrail(player, trailId, dequip)
 end
 
 function EventHandler.Client:setCurrentAnim(player: Player, animName: string)

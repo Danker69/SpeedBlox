@@ -24,11 +24,21 @@ local CoinsSelector = TB:WaitForChild("CoinsSelector")
 local Shop = {}
 
 function Shop:Start()
+    local function CreateNotification(Title: string, Text: string, Icon: string?)
+        local SetCore = game:GetService("StarterGui"):SetCore("SendNotification", {
+            Title = Title;
+            Text = Text;
+            Icon = Icon or "";
+            Duration = 5;
+        })
+    end
+
     local function createElement(trail: string, trailId: string)
         local profile = self.Services.DataManager:Get()
 
         local clone = Gui.Assets.ShopElement:Clone()
         clone.Title.Text = trail
+        clone:SetAttribute("id", trailId)
 
         if table.find(profile.Inventory.Trails, trailId) then
             clone.Use.Text = "Equip"
@@ -39,12 +49,23 @@ function Shop:Start()
         end
 
         clone.Use.MouseButton1Click:Connect(function()
-            local success = self.Services.EventHandler:setTrail(trailId)
+            local result = self.Services.EventHandler:setTrail(trailId, clone.Use.Text:lower())
 
-            if success then
-                
-            else
+            if result == true then
+                for _, btn in pairs(TrailsSelection:GetChildren()) do
+                    if btn:IsA("UIGridLayout") then continue end
 
+                    if btn.Use.Text == "Dequip" then
+                        btn.Use.Text = "Equip"
+                    end
+                end
+                clone.Use.Text = "Dequip"
+
+            elseif result == "dequip" then
+                clone.Use.Text = "Equip"
+
+            elseif result == false then
+                CreateNotification("Purchase Error", "Not enough coins!")
             end
         end)
 
@@ -116,14 +137,6 @@ function Shop:Start()
                         clone.Use.Text = "Unequip"
                     else
                         -- player doesn't have enough coins
-                        local function CreateNotification(Title,Text)
-                            local SetCore = game:GetService("StarterGui"):SetCore("SendNotification", {
-                                Title = Title;
-                                Text = Text;
-                                Icon = "";
-                                Duration = 5;
-                            })
-                        end
                         CreateNotification("Store", "You do not have enough coins!")
                     end
                 end

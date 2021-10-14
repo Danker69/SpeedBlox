@@ -21,21 +21,26 @@ end
 
 function OnPlayerEventManager:PlayerDied(player: Player, valuesFolder: Folder)
     local thread = coroutine.create(function()
-    task.wait(10)
-    local RunService = game:GetService("RunService")
+        task.wait(10)
+        local RunService = game:GetService("RunService")
 
-	player.CharacterAdded:Connect(function(character)
-		character.HumanoidRootPart:GetPropertyChangedSignal("CFrame"):Connect(function()
-			print(player, " has teleported here:", character.HumanoidRootPart.Position)
+        player.CharacterAdded:Connect(function(character)
+            character.HumanoidRootPart:GetPropertyChangedSignal("CFrame"):Connect(function()
+                --print(player, " has teleported here:", character.HumanoidRootPart.Position)
+            end)
+
+            player.CharacterAppearanceLoaded:Wait()
+            RunService.Stepped:Wait()
+
+            local profile = self.Services.DataManager:Get(player)
+            local trailId = profile.Inventory.CurrentTrail
+
+            self.Services.EventHandler:setTrail(player, trailId)
+
+            self.Modules.TeleportWithinPlace:teleportPlayerViaInteger(player, valuesFolder.PortalIndex.Value)
+            player.Character.Humanoid.WalkSpeed = _G.DEFAULT_BOOSTED_WALKSPEED
         end)
-	end)
-
-	player.CharacterAppearanceLoaded:Wait()
-	RunService.Stepped:Wait()
-
-	print("LOADED")
-	self.Modules.TeleportWithinPlace:teleportPlayerViaInteger(player, valuesFolder.PortalIndex.Value)
-    player.Character.Humanoid.WalkSpeed = _G.DEFAULT_BOOSTED_WALKSPEED
+        --print("LOADED")
 	end)
 
     coroutine.resume(thread)
@@ -46,6 +51,14 @@ function OnPlayerEventManager:SetTags(player: Player)
 
     if player.UserId == 458071717 or 231482825 or 62786105 or 1970849469 then
         table.insert(self.Services.DataManager:Get(player).Tags, "Tester")
+    end
+end
+
+function OnPlayerEventManager:SetTrail(player: Player)
+    local trail = self.Services.DataManager:Get(player).Inventory.CurrentTrail
+    
+    if trail ~= "" and trail ~= "def" then
+        self.Services.EventHandler:setTrail(player, trail)
     end
 end
 
@@ -111,6 +124,7 @@ function OnPlayerEventManager:Start()
         self:PlayerDied(player, ValuesFolder)
         self:SetTags(player)
         self:AddCoins_Rep(player, 1)
+        self:SetTrail(player)
         
         -- Leaderstats
         local leaderstats = Instance.new("Folder")
