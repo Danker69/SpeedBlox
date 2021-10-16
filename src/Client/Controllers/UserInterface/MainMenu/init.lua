@@ -23,6 +23,12 @@ function MainMenu:Start()
 	local Detached: Frame = Gui.Parent:WaitForChild("Detached")
 	local MainMenuToggle: TextButton = Detached:WaitForChild("MainMenuToggle"):WaitForChild("Toggle")
 
+	local Blur = Instance.new("BlurEffect")
+	Blur.Name = "MainMenuBlur"
+	Blur.Size = 24
+	Blur.Enabled = true
+	Blur.Parent = game:GetService("Lighting")
+
 	local profile: {}
 
 	CreditsHandler.AddCredit(1, 493677451, "Head Developer") -- Danker
@@ -39,11 +45,13 @@ function MainMenu:Start()
 	MainMenuToggle.MouseButton1Click:Connect(function()
 		MainMenuToggle.Visible = false
 		Gui.Enabled = true
+		Blur.Enabled = true
 	end)
 
 	-- Main:
 	PlayButton.MouseButton1Click:Connect(function()
 		Gui.Enabled = false
+		Blur.Enabled = false
 		MainMenuToggle.Visible = true
 	end)
 
