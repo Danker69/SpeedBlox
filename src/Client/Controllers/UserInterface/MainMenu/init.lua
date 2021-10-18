@@ -31,7 +31,7 @@ function MainMenu:Start()
 
 	local profile: {}
 
-	CreditsHandler.AddCredit(1, 493677451, "Head Developer") -- Danker
+	CreditsHandler.AddCredit(1, 493677451, "Lead Developer") -- Danker
 	CreditsHandler.AddCredit(2, 458071717, "Tester") -- BadCat
 	CreditsHandler.AddCredit(3, 231482825, "Tester") -- Alex
 	CreditsHandler.AddCredit(4, 62786105, "Tester") -- Sen
