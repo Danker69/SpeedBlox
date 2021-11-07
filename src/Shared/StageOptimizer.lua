@@ -20,6 +20,8 @@ end
 local StageOptimizer = {}
 
 function StageOptimizer.Default()
+
+    --[[
     for i, stage in pairs(_table) do
         if i ~= 1 then
             stage.Parent = nil
@@ -30,11 +32,12 @@ function StageOptimizer.Default()
         if i ~= 1 then
             portal.Parent = nil
         end
-    end
+    end]]
 end
 
 function StageOptimizer.RemoveAllStagesAndAdd(stageIndex: number)
     -- Removes all stages except the one passed in the arguments.
+    --[[
     _table[stageIndex].Parent = workspace.Stages
     portalTable[stageIndex].Parent = workspace.Portals
 
@@ -48,7 +51,7 @@ function StageOptimizer.RemoveAllStagesAndAdd(stageIndex: number)
         if i ~= stageIndex then
             portalModel.Parent = nil
         end
-    end
+    end]]
 end
 
 function StageOptimizer.NextStage(newStageIndex: number)
