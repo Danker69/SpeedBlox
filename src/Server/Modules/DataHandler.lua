@@ -8,8 +8,8 @@ local DataHandler = {}
 
 function DataHandler:TAB(profile) --TesterAlphaBeta
     local toAward = { -- Change when certain game phase is over
-        Tester = true;
-        Alpha = false;
+        Tester = false;
+        Alpha = true;
         Beta = false;
     }
 
@@ -22,6 +22,8 @@ function DataHandler:TAB(profile) --TesterAlphaBeta
     for role, bool in pairs(toAward) do
         for objectName, v in pairs(profile) do
             if v == true then continue end
+            if bool == true then continue end
+            
             if role == objectName then
                 profile[objectName] = bool
             end
