@@ -47,10 +47,16 @@ function OnPlayerEventManager:PlayerDied(player: Player, valuesFolder: Folder)
 end
 
 function OnPlayerEventManager:SetTags(player: Player)
-    if table.find(self.Services.DataManager:Get(player).Tags, "Tester") then return end
-
-    if player.UserId == 458071717 or 231482825 or 62786105 or 1970849469 then
-        table.insert(self.Services.DataManager:Get(player).Tags, "Tester")
+    if not table.find(self.Services.DataManager:Get(player).Tags, "Tester") then
+        if player.UserId == 458071717 or 231482825 or 62786105 or 1970849469 then
+            table.insert(self.Services.DataManager:Get(player).Tags, "Tester")
+        end
+    end
+    
+    if not table.find(self.Services.DataManager:Get(player).Tags, "Alpha") then
+        if self.Services.DataManager:Get(player).Alpha then
+            table.insert(self.Services.DataManager:Get(player).Tags, "Alpha")
+        end
     end
 end
 

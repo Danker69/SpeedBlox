@@ -59,6 +59,7 @@ local function PlayerAdded(player: Player)
 		if player:IsDescendantOf(Players) == true then
 			Profiles[player] = profile
 			-- A profile has been successfully loaded:
+			profile.Data.Alpha = true
 		else
 			-- Player left before the profile loaded:
 			profile:Release()
