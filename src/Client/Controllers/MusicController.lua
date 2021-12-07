@@ -14,7 +14,7 @@ local Soundtrack = {
 }
 
 function MusicController:Start()
-    local played: {[number]: number} = {}
+    local played: {[number]: string} = {}
 
     local Player: Player = game:GetService("Players").LocalPlayer
 

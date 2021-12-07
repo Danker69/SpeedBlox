@@ -58,6 +58,12 @@ function OnPlayerEventManager:SetTags(player: Player)
             table.insert(self.Services.DataManager:Get(player).Tags, "Alpha")
         end
     end
+
+    if not table.find(self.Services.DataManager:Get(player).Tags, "Developer") then
+        if self.Services.DataManager:Get(player).Developer then
+            table.insert(self.Services.DataManager:Get(player).Tags, "Developer")
+        end
+    end
 end
 
 function OnPlayerEventManager:SetTrail(player: Player)

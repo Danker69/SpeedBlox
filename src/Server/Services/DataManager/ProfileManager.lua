@@ -12,6 +12,7 @@ local Profiles = {}
 local profileTemplate = {
 	Coins = 0;
 
+	Developer = false;
 	Tester = false;
 	Alpha = false;
 	Beta = false;
@@ -37,6 +38,11 @@ local profileTemplate = {
 	};
 }
 
+local devs = {
+	493677451;
+	2242612589;
+}
+
 local ProfileService = require(script.Parent.Parent.Parent:WaitForChild("Modules"):WaitForChild("ProfileService"))
 
 local GameProfileStore = ProfileService.GetProfileStore(
@@ -60,6 +66,12 @@ local function PlayerAdded(player: Player)
 			Profiles[player] = profile
 			-- A profile has been successfully loaded:
 			profile.Data.Alpha = true
+
+			for _, id in pairs(devs) do
+				if player.UserId == id then
+					profile.Data.Developer = true
+				end
+			end
 		else
 			-- Player left before the profile loaded:
 			profile:Release()
