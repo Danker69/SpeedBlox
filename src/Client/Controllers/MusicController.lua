@@ -13,20 +13,22 @@ local Soundtrack = {
     "rbxassetid://1840403089"; -- The Urban Environment(b)
 }
 
-function MusicController:Start()
-    local played: {[number]: string} = {}
+local Status: boolean
 
-    local Player: Player = game:GetService("Players").LocalPlayer
+local played: {[number]: string} = {}
 
-	local Music: Folder = Instance.new("Folder")
-    Music.Name = "Music"
-    Music.Parent = Player
+local Player: Player = game:GetService("Players").LocalPlayer
 
-    local Audio: Sound = Instance.new("Sound")
-    Audio.Name = "Audio"
-    Audio.Volume = .15
-    Audio.Parent = Music 
+local Music: Folder = Instance.new("Folder")
+Music.Name = "Music"
+Music.Parent = Player
 
+local Audio: Sound = Instance.new("Sound")
+Audio.Name = "Audio"
+Audio.Volume = .15
+Audio.Parent = Music
+
+function MusicController:Play()
     Audio.SoundId = Soundtrack[math.random(1, #Soundtrack)]
     if not Audio.IsLoaded then
         Audio.Loaded:Wait()
@@ -57,8 +59,22 @@ function MusicController:Start()
         end
         Audio:Play()
     end)
+    Status = true
 end
 
+function MusicController:GetStatus()
+    return Status
+end
+
+function MusicController:Stop()
+    Audio:Stop()
+    table.clear(played)
+    Status = false
+end
+
+function MusicController:Start()
+    self:Play()
+end
 
 function MusicController:Init()
 	

@@ -17,6 +17,7 @@ function MainMenu:Start()
 	local CreditsExit = Gui:WaitForChild("CreditsFrame"):WaitForChild("ExitButton")
 	local SettingsTagSelection = SettingsExit.Parent:WaitForChild("SettingsHolder"):WaitForChild("ChatTagSetting"):WaitForChild("TagSelection")
 	local SettingsTagDropdown = SettingsExit.Parent:WaitForChild("TagDropdown")
+	local SettingsMusicToggle = SettingsExit.Parent:WaitForChild("SettingsHolder"):WaitForChild("MusicToggle"):WaitForChild("Toggle")
 	
 	local CreditsHandler = require(script:WaitForChild("CreditsHandler"))
 
@@ -80,6 +81,20 @@ function MainMenu:Start()
 
 	SettingsTagSelection.MouseButton1Click:Connect(function()
 		SettingsTagDropdown.Visible = not SettingsTagDropdown.Visible
+	end)
+
+	SettingsMusicToggle.MouseButton1Click:Connect(function()
+		local status = self.Controllers.MusicController:GetStatus()
+
+		if status then
+			self.Controllers.MusicController:Stop()
+			SettingsMusicToggle.Text = "Off"
+			SettingsMusicToggle.BackgroundColor3 = Color3.fromRGB(255, 87, 87)
+		else
+			self.Controllers.MusicController:Play()
+			SettingsMusicToggle.Text = "On"
+			SettingsMusicToggle.BackgroundColor3 = Color3.fromRGB(85, 255, 127)
+		end
 	end)
 
 	-- Add tags to dropdown --
