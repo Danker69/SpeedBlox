@@ -65,7 +65,6 @@ local function PlayerAdded(player: Player)
 		if player:IsDescendantOf(Players) == true then
 			Profiles[player] = profile
 			-- A profile has been successfully loaded:
-			profile.Data.Alpha = true
 
 			for _, id in pairs(devs) do
 				if player.UserId == id then
