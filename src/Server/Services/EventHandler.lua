@@ -75,6 +75,9 @@ function EventHandler:setTrail(player: Player, trailId: string, dequip: string?)
     end
 
     local function purchase(): boolean
+        if Trails[trailId]:GetAttribute("Type") == "Gamepass" then -- runs if player doesn't own the respective gamepass
+            return false
+        end
         local price: number = Trails[trailId]:GetAttribute("Price")
 
         if profile.Coins >= price then
