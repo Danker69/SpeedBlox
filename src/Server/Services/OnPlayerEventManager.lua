@@ -76,7 +76,7 @@ end
 
 function OnPlayerEventManager:AddCoins_Rep(player: Player, coins: number)
     coroutine.wrap(function()
-        while true do
+        while player do
             self.Services.DataManager:Get(player).Coins += coins
             task.wait(10)
         end
@@ -94,7 +94,7 @@ function OnPlayerEventManager:HandleAnims()
         for _, anim: Animation in pairs(game:GetService("ReplicatedStorage"):WaitForChild("Assets"):WaitForChild("Shop"):WaitForChild("Animations"):GetChildren()) do
             if anim:GetAttribute("Name") == animName then
                 print(anim)
-                return anim.AnimationId
+                return "rbxassetid://" .. anim.AnimationId
             end
         end
     end
@@ -149,7 +149,7 @@ function OnPlayerEventManager:Start()
         coins.Parent = leaderstats
 
         coroutine.wrap(function()
-            while true do
+            while player do
                 coins.Value = self.Services.DataManager:Get(player).Coins
                 task.wait(5)
             end
