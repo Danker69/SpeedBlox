@@ -7,6 +7,8 @@
 local MainMenu = {}
 
 function MainMenu:Start()
+	local TS = game:GetService("TweenService")
+
 	local Gui: ScreenGui = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui"):WaitForChild("MainMenuGui")
 	local Background = Gui:WaitForChild("Background")
 	local ButtonHolder = Background:WaitForChild("ButtonHolder")
@@ -31,12 +33,19 @@ function MainMenu:Start()
 	Blur.Parent = game:GetService("Lighting")
 
 	local profile: {}
+	local credits = {}
 
-	CreditsHandler.AddCredit(1, 493677451, "Lead Developer") -- Danker
-	CreditsHandler.AddCredit(2, 2242612589, "Map Builder") -- Angel
-	CreditsHandler.AddCredit(2, 458071717, "Tester") -- BadCat
-	CreditsHandler.AddCredit(3, 231482825, "Tester") -- Alex
-	CreditsHandler.AddCredit(4, 62786105, "Tester") -- Sen
+	local ButtonHolderSequence = {
+		"PlayButton",
+		"SettingsButton",
+		"CreditsButton",
+	}
+
+	CreditsHandler.AddCredit(1, 493677451, "Lead Developer", credits) -- Danker
+	CreditsHandler.AddCredit(2, 2242612589, "Map Builder", credits) -- Angel
+	CreditsHandler.AddCredit(2, 458071717, "Tester", credits) -- BadCat
+	CreditsHandler.AddCredit(3, 231482825, "Tester", credits) -- Alex
+	CreditsHandler.AddCredit(4, 62786105, "Tester", credits) -- Sen
 
 	local function tempFunc(bool: boolean)
 		Background.Visible = bool
@@ -45,16 +54,36 @@ function MainMenu:Start()
 
 	-- Detached:
 	MainMenuToggle.MouseButton1Click:Connect(function()
+		Background.Transparency = .5
+		Background.TitleLogo.Image.ImageTransparency = 0
+		Background.Andromeda.TextTransparency = 0
+
 		MainMenuToggle.Visible = false
 		Gui.Enabled = true
 		Blur.Enabled = true
+
+		local t = TS:Create(Background, TweenInfo.new(1, Enum.EasingStyle.Back, Enum.EasingDirection.Out), { Position = UDim2.fromScale(0, 0)})
+		t:Play()
+		t.Completed:Wait()
 	end)
 
 	-- Main:
 	PlayButton.MouseButton1Click:Connect(function()
-		Gui.Enabled = false
 		Blur.Enabled = false
+
+		-- !! actual shit code below !! --
+		-- we do a little redefining :troll:
+		TS:Create(Background, TweenInfo.new(1, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut), { Transparency = 1 }):Play()
+		TS:Create(Background.TitleLogo.Image, TweenInfo.new(1, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut), { ImageTransparency = 1 }):Play()
+		local t = TS:Create(Background.Andromeda, TweenInfo.new(1, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut), { TextTransparency = 1 })
+		t:Play()
+		t.Completed:Wait()
+		local t = TS:Create(Background, TweenInfo.new(1, Enum.EasingStyle.Back, Enum.EasingDirection.In), { Position = UDim2.fromScale(0, 1)})
+		t:Play()
+		t.Completed:Wait()
+
 		MainMenuToggle.Visible = true
+		Gui.Enabled = false
 	end)
 
 	SettingsButton.MouseButton1Click:Connect(function()
@@ -72,11 +101,43 @@ function MainMenu:Start()
 	CreditsButton.MouseButton1Click:Connect(function()
 		CreditsExit.Parent.Visible = true
 		tempFunc(false)
+
+		for _, credit: GuiBase in ipairs(credits) do
+			local ti = TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut)
+
+			credit.UserProfilePic.ImageTransparency = 1
+			credit.UserProfilePic.BackgroundTransparency = 1
+		
+			credit.Credit.TextTransparency = 1
+
+			for __, element in ipairs(credit:GetDescendants()) do
+				local tp
+				if element:IsA("TextLabel") then
+					tp = { TextTransparency = 0 }
+				end
+				if element:IsA("ImageLabel") then
+					tp = { ImageTransparency = 0, BackgroundTransparency = 0 }
+				end
+
+				if not tp then continue end
+				TS:Create(element, ti, tp):Play()
+			end
+			local t = TS:Create(credit, ti, { BackgroundTransparency = 0 })
+			t:Play()
+			t.Completed:Wait()
+		end
 	end)
 
 	CreditsExit.MouseButton1Click:Connect(function()
 		CreditsExit.Parent.Visible = false
 		tempFunc(true)
+
+		for _, credit in ipairs(credits) do
+			credit.UserProfilePic.ImageTransparency = 1
+			credit.UserProfilePic.BackgroundTransparency = 1
+		
+			credit.Credit.TextTransparency = 1
+		end
 	end)
 
 	SettingsTagSelection.MouseButton1Click:Connect(function()
